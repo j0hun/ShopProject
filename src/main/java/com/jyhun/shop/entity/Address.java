@@ -14,7 +14,7 @@ public class Address {
 
     private String city;
     private String street;
-    private String zipcode;
+    private String zipCode;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

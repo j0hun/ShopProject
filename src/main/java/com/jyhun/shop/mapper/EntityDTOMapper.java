@@ -23,7 +23,7 @@ public class EntityDTOMapper {
         addressDTO.setId(address.getId());
         addressDTO.setCity(address.getCity());
         addressDTO.setStreet(address.getStreet());
-        addressDTO.setZipcode(address.getZipcode());
+        addressDTO.setZipCode(address.getZipCode());
         return addressDTO;
     }
 

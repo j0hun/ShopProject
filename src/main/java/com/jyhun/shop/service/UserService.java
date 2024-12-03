@@ -16,9 +16,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -64,6 +66,7 @@ public class UserService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public User getLoginUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -71,6 +74,7 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("유저가 아닙니다"));
     }
 
+    @Transactional(readOnly = true)
     public Response getUserInfoAndOrderHistory() {
         User user = getLoginUser();
         UserDTO userDTO = entityDTOMapper.mapUserToDTOPlusAddressAndOrderHistory(user);

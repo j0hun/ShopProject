@@ -12,7 +12,7 @@ public class AddressDTO {
     private Long id;
     private String city;
     private String street;
-    private String zipcode;
+    private String zipCode;
     private UserDTO userDTO;
 
 }
