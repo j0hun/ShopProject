@@ -20,6 +20,9 @@ spring:
     hibernate:
       ddl-auto: update
       # Hibernate의 DDL 생성 전략 설정
+  web:
+    resources:
+      static-locations: file:///C:/Image/
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
