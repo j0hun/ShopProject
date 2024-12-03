@@ -9,7 +9,7 @@ import java.util.List;
 public class OrderRequest {
 
     private Long totalPrice;
-    private List<OrderItemRequest> orderItemRequestList;
+    private List<OrderItemRequest> items;
     private Payment payment;
 
 }
