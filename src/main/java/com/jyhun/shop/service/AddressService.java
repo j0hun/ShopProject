@@ -24,7 +24,7 @@ public class AddressService {
             address = new Address();
             address.setUser(user);
         }
-        if (addressDTO.getStreet() != null) address.setStreet(address.getStreet());
+        if (addressDTO.getStreet() != null) address.setStreet(addressDTO.getStreet());
         if (addressDTO.getCity() != null) address.setCity(addressDTO.getCity());
         if (addressDTO.getZipCode() != null) address.setZipCode(addressDTO.getZipCode());
         addressRepository.save(address);

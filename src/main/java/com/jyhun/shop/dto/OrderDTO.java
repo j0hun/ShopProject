@@ -13,6 +13,6 @@ public class OrderDTO {
 
     private Long id;
     private Long totalPrice;
-    private List<OrderItemDTO> orderITemDTOList;
+    private List<OrderItemDTO> orderItemList;
 
 }

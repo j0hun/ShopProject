@@ -13,6 +13,6 @@ public class AddressDTO {
     private String city;
     private String street;
     private String zipCode;
-    private UserDTO userDTO;
+    private UserDTO user;
 
 }

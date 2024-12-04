@@ -52,7 +52,7 @@ public class ProductController {
 
     @GetMapping("/get-by-product-id/{productId}")
     public ResponseEntity<Response> getProductById(@PathVariable Long productId) {
-        return ResponseEntity.ok(productService.getProductsByCategory(productId));
+        return ResponseEntity.ok(productService.getProductById(productId));
     }
 
     @GetMapping("/get-all")

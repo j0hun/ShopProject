@@ -13,6 +13,6 @@ public class CategoryDTO {
 
     private Long id;
     private String name;
-    private List<ProductDTO> productDTOList;
+    private List<ProductDTO> productList;
 
 }

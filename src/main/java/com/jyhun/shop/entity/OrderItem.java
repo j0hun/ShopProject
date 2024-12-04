@@ -17,6 +17,7 @@ public class OrderItem {
 
     private Long price;
 
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)

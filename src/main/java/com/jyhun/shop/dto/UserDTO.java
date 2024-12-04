@@ -17,7 +17,7 @@ public class UserDTO {
     private String phoneNumber;
     private String password;
     private String role;
-    private List<OrderItemDTO> orderItemDTOList;
-    private AddressDTO addressDTO;
+    private List<OrderItemDTO> orderItemList;
+    private AddressDTO address;
 
 }

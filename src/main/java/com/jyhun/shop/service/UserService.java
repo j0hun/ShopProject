@@ -31,7 +31,7 @@ public class UserService {
     public Response register(UserDTO userDTO) {
         UserRole role = UserRole.USER;
 
-        if(userDTO.getRole() != null && userDTO.getRole().equalsIgnoreCase("admin")) {
+        if (userDTO.getRole() != null && userDTO.getRole().equalsIgnoreCase("admin")) {
             role = UserRole.ADMIN;
         }
 
@@ -39,6 +39,7 @@ public class UserService {
                 .name(userDTO.getName())
                 .email(userDTO.getEmail())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
+                .phoneNumber(userDTO.getPhoneNumber())
                 .userRole(role)
                 .build();
 
@@ -54,7 +55,7 @@ public class UserService {
 
     public Response loginUser(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("이메일을 찾을 수 없습니다."));
-        if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("패스워드가 맞지 않습니다.");
         }
         String token = jwtUtils.generateToken(user);

@@ -15,6 +15,7 @@ public class EntityDTOMapper {
         userDTO.setPhoneNumber(user.getPhoneNumber());
         userDTO.setEmail(user.getEmail());
         userDTO.setRole(user.getUserRole().name());
+        userDTO.setName(user.getName());
         return userDTO;
     }
 
@@ -57,7 +58,7 @@ public class EntityDTOMapper {
         UserDTO userDTO = mapUserToDTOBasic(user);
         if(user.getAddress() != null) {
             AddressDTO addressDTO = mapAddressToDTOBasic(user.getAddress());
-            userDTO.setAddressDTO(addressDTO);
+            userDTO.setAddress(addressDTO);
         }
         return userDTO;
     }
@@ -66,7 +67,7 @@ public class EntityDTOMapper {
         OrderItemDTO orderItemDTO = mapOrderItemToDTOBasic(orderItem);
         if(orderItem.getOrder() != null) {
             ProductDTO productDTO = mapProductToDTOBasic(orderItem.getProduct());
-            orderItemDTO.setProductDTO(productDTO);
+            orderItemDTO.setProduct(productDTO);
         }
         return orderItemDTO;
     }
@@ -75,7 +76,7 @@ public class EntityDTOMapper {
         OrderItemDTO orderItemDTO = mapOrderItemToDTOPlusProduct(orderItem);
         if(orderItem.getUser() != null) {
             UserDTO userDTO = mapUserToDTOPlusAddress(orderItem.getUser());
-            orderItemDTO.setUserDTO(userDTO);
+            orderItemDTO.setUser(userDTO);
         }
         return orderItemDTO;
     }
@@ -83,7 +84,7 @@ public class EntityDTOMapper {
     public UserDTO mapUserToDTOPlusAddressAndOrderHistory(User user) {
         UserDTO userDTO = mapUserToDTOPlusAddress(user);
         if(user.getOrderItemList() != null && !user.getOrderItemList().isEmpty()) {
-            userDTO.setOrderItemDTOList(user.getOrderItemList()
+            userDTO.setOrderItemList(user.getOrderItemList()
                     .stream()
                     .map(this::mapOrderItemToDTOPlusProduct)
                     .collect(Collectors.toList()));
