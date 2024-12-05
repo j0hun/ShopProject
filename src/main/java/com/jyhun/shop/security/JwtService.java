@@ -16,11 +16,9 @@ import java.util.Date;
 
 @Service
 @Slf4j
-public class JwtUtils {
-
+public class JwtService {
     private static final long EXPIRATION_TIME = 1000 * 60 * 60;
     private SecretKey key;
-
     @Value("${jwt.secret}")
     private String secret;
 
@@ -32,10 +30,10 @@ public class JwtUtils {
 
     public String generateToken(User user) {
         String username = user.getEmail();
-        return generateToken(username);
+        return createToken(username);
     }
 
-    public String generateToken(String username) {
+    public String createToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -54,7 +52,6 @@ public class JwtUtils {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
         return claims.getSubject();
     }
 
@@ -69,9 +66,6 @@ public class JwtUtils {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
         return claims.getExpiration().before(new Date());
     }
-
-
 }

@@ -1,5 +1,5 @@
 package com.jyhun.shop.enums;
 
-public enum UserRole {
+public enum Role {
     ADMIN, USER
 }

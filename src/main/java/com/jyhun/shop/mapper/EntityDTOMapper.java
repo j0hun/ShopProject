@@ -14,7 +14,7 @@ public class EntityDTOMapper {
         userDTO.setId(user.getId());
         userDTO.setPhoneNumber(user.getPhoneNumber());
         userDTO.setEmail(user.getEmail());
-        userDTO.setRole(user.getUserRole().name());
+        userDTO.setRole(user.getRole().name());
         userDTO.setName(user.getName());
         return userDTO;
     }
