@@ -19,7 +19,7 @@ public class Response {
     private int totalPage;
     private long totalElement;
 
-    private AddressDTO address;
+    private AddressRequestDTO address;
 
     private UserDTO user;
     private List<UserDTO> userList;

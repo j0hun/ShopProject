@@ -19,15 +19,6 @@ public class EntityDTOMapper {
         return userDTO;
     }
 
-    public AddressDTO mapAddressToDTOBasic(Address address) {
-        AddressDTO addressDTO = new AddressDTO();
-        addressDTO.setId(address.getId());
-        addressDTO.setCity(address.getCity());
-        addressDTO.setStreet(address.getStreet());
-        addressDTO.setZipCode(address.getZipCode());
-        return addressDTO;
-    }
-
     public CategoryDTO mapCategoryToDTOBasic(Category category) {
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setId(category.getId());
@@ -56,40 +47,40 @@ public class EntityDTOMapper {
 
     public UserDTO mapUserToDTOPlusAddress(User user) {
         UserDTO userDTO = mapUserToDTOBasic(user);
-        if(user.getAddress() != null) {
-            AddressDTO addressDTO = mapAddressToDTOBasic(user.getAddress());
-            userDTO.setAddress(addressDTO);
+        if (user.getAddress() != null) {
+            AddressResponseDTO addressResponseDTO = mapAddressToDTO(user.getAddress());
+            userDTO.setAddress(addressResponseDTO);
         }
         return userDTO;
     }
 
     public OrderItemDTO mapOrderItemToDTOPlusProduct(OrderItem orderItem) {
         OrderItemDTO orderItemDTO = mapOrderItemToDTOBasic(orderItem);
-        if(orderItem.getOrder() != null) {
+        if (orderItem.getOrder() != null) {
             ProductDTO productDTO = mapProductToDTOBasic(orderItem.getProduct());
             orderItemDTO.setProduct(productDTO);
         }
         return orderItemDTO;
     }
 
-    public OrderItemDTO mapOrderItemToDTOPlusProductAndUser(OrderItem orderItem) {
-        OrderItemDTO orderItemDTO = mapOrderItemToDTOPlusProduct(orderItem);
-        if(orderItem.getUser() != null) {
-            UserDTO userDTO = mapUserToDTOPlusAddress(orderItem.getUser());
-            orderItemDTO.setUser(userDTO);
-        }
-        return orderItemDTO;
-    }
-
     public UserDTO mapUserToDTOPlusAddressAndOrderHistory(User user) {
         UserDTO userDTO = mapUserToDTOPlusAddress(user);
-        if(user.getOrderItemList() != null && !user.getOrderItemList().isEmpty()) {
+        if (user.getOrderItemList() != null && !user.getOrderItemList().isEmpty()) {
             userDTO.setOrderItemList(user.getOrderItemList()
                     .stream()
                     .map(this::mapOrderItemToDTOPlusProduct)
                     .collect(Collectors.toList()));
         }
         return userDTO;
+    }
+
+    public AddressResponseDTO mapAddressToDTO(Address address) {
+        return AddressResponseDTO.builder()
+                .id(address.getId())
+                .city(address.getCity())
+                .street(address.getStreet())
+                .zipCode(address.getZipCode())
+                .build();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.jyhun.shop.service;
 
-import com.jyhun.shop.dto.AddressDTO;
-import com.jyhun.shop.dto.Response;
+import com.jyhun.shop.dto.AddressRequestDTO;
+import com.jyhun.shop.dto.ResultDTO;
 import com.jyhun.shop.entity.Address;
 import com.jyhun.shop.entity.User;
 import com.jyhun.shop.repository.AddressRepository;
@@ -17,23 +17,41 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final UserService userService;
 
-    public Response saveAndUpdateAddress(AddressDTO addressDTO) {
+    public ResultDTO<Void> saveAndUpdateAddress(AddressRequestDTO addressRequestDTO) {
         User user = userService.getLoginUser();
-        Address address = user.getAddress();
-        if (address == null) {
-            address = new Address();
-            address.setUser(user);
-        }
-        if (addressDTO.getStreet() != null) address.setStreet(addressDTO.getStreet());
-        if (addressDTO.getCity() != null) address.setCity(addressDTO.getCity());
-        if (addressDTO.getZipCode() != null) address.setZipCode(addressDTO.getZipCode());
-        addressRepository.save(address);
+        Address currentAddress = user.getAddress();
 
-        String message = (user.getAddress() == null) ? "Address successfully created" : "Address successfully updated";
-        return Response.builder()
+        if(currentAddress == null) {
+            Address newAddress = createNewAddress(addressRequestDTO);
+            user.changeAddress(newAddress);
+            addressRepository.save(newAddress);
+        }else {
+            updateAddress(addressRequestDTO, currentAddress);
+        }
+
+        String message = (user.getAddress() == null) ? "주소 생성 성공" : "주소 변경 성공";
+
+        return ResultDTO.<Void>builder()
                 .status(200)
                 .message(message)
+                .dto(null)
                 .build();
+    }
+
+    private Address createNewAddress(AddressRequestDTO addressRequestDTO) {
+        return Address.builder()
+                .city(addressRequestDTO.getCity())
+                .street(addressRequestDTO.getStreet())
+                .zipCode(addressRequestDTO.getZipCode())
+                .build();
+    }
+
+    private static void updateAddress(AddressRequestDTO addressRequestDTO, Address currentAddress) {
+        currentAddress.updateAddress(
+                addressRequestDTO.getCity(),
+                addressRequestDTO.getStreet(),
+                addressRequestDTO.getZipCode()
+        );
     }
 
 }

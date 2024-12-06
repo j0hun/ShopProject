@@ -18,6 +18,6 @@ public class UserDTO {
     private String password;
     private String role;
     private List<OrderItemDTO> orderItemList;
-    private AddressDTO address;
+    private AddressResponseDTO address;
 
 }
