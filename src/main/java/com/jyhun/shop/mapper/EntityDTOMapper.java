@@ -44,13 +44,14 @@ public class EntityDTOMapper {
         return orderItemDTO;
     }
 
-    public ProductDTO mapProductToDTOBasic(Product product) {
+    public ProductDTO mapProductToDTO(Product product) {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.getId());
         productDTO.setName(product.getName());
         productDTO.setDescription(product.getDescription());
         productDTO.setPrice(product.getPrice());
         productDTO.setImageUrl(product.getImageUrl());
+        productDTO.setCategory(mapCategoryToDTO(product.getCategory()));
         return productDTO;
     }
 
@@ -66,7 +67,7 @@ public class EntityDTOMapper {
     public OrderItemDTO mapOrderItemToDTOPlusProduct(OrderItem orderItem) {
         OrderItemDTO orderItemDTO = mapOrderItemToDTOBasic(orderItem);
         if (orderItem.getOrder() != null) {
-            ProductDTO productDTO = mapProductToDTOBasic(orderItem.getProduct());
+            ProductDTO productDTO = mapProductToDTO(orderItem.getProduct());
             orderItemDTO.setProduct(productDTO);
         }
         return orderItemDTO;

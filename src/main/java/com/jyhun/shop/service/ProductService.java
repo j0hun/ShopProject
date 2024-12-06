@@ -1,7 +1,7 @@
 package com.jyhun.shop.service;
 
 import com.jyhun.shop.dto.ProductDTO;
-import com.jyhun.shop.dto.Response;
+import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.entity.Category;
 import com.jyhun.shop.entity.Product;
 import com.jyhun.shop.exception.NotFoundException;
@@ -26,90 +26,75 @@ public class ProductService {
     private final EntityDTOMapper entityDTOMapper;
     private final LocalStorageService localStorageService;
 
-    public Response createProduct(Long categoryId, MultipartFile image, String name, String description, Long price) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("Category Not Found"));
+    public ResponseDTO createProduct(Long categoryId, MultipartFile image, String name, String description, Long price) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("카테고리 조회 실패"));
         String productImageUrl = localStorageService.saveImageToLocal(image);
 
-        Product product = new Product();
-        product.setCategory(category);
-        product.setPrice(price);
-        product.setName(name);
-        product.setDescription(description);
-        product.setImageUrl(productImageUrl);
+        Product product = Product.builder()
+                .category(category)
+                .price(price)
+                .name(name)
+                .description(description)
+                .imageUrl(productImageUrl)
+                .build();
 
         productRepository.save(product);
-        return Response.builder().status(200).message("Product successfully created").build();
+        return ResponseDTO.builder().status(200).message("상품 생성 성공").build();
     }
 
-    public Response updateProduct(Long productId, Long categoryId, MultipartFile image, String name, String description, Long price) {
+    public ResponseDTO updateProduct(Long productId, Long categoryId, MultipartFile image, String name, String description, Long price) {
 
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("상품 조회 실패"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("카테고리 조회 실패"));
 
-        Category category = null;
         String productImageUrl = null;
-
-        if (categoryId != null) {
-            category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("Category Not Found"));
-        }
 
         if (image != null && !image.isEmpty()) {
             productImageUrl = localStorageService.saveImageToLocal(image);
         }
 
-        if (category != null) product.setCategory(category);
-        if (name != null) product.setName(name);
-        if (price != null) product.setPrice(price);
-        if (description != null) product.setDescription(description);
-        if (productImageUrl != null) product.setImageUrl(productImageUrl);
-
-        productRepository.save(product);
-
-        return Response.builder().status(200).message("Product Updated successfully").build();
+        product.updateProduct(name, description, productImageUrl, price, category);
+        return ResponseDTO.builder().status(200).message("상품 수정 성공").build();
     }
 
-    public Response deleteProduct(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
+    public ResponseDTO deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("상품 조회 실패"));
         productRepository.delete(product);
 
-        return Response.builder().status(200).message("Product deleted successfully").build();
+        return ResponseDTO.builder().status(200).message("상품 삭제 성공").build();
     }
 
     @Transactional(readOnly = true)
-    public Response getProductById(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
-        ProductDTO productDTO = entityDTOMapper.mapProductToDTOBasic(product);
-        return Response.builder().status(200).product(productDTO).build();
+    public ResponseDTO getProductById(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("상품 조회 실패"));
+        ProductDTO productDTO = entityDTOMapper.mapProductToDTO(product);
+        return ResponseDTO.builder().status(200).message("상품 조회 성공").data(productDTO).build();
     }
 
     @Transactional(readOnly = true)
-    public Response getAllProducts() {
-        List<ProductDTO> productDTOList = productRepository.findAll().stream().map(entityDTOMapper::mapProductToDTOBasic).collect(Collectors.toList());
-
-        return Response.builder().status(200).productList(productDTOList).build();
+    public ResponseDTO getAllProducts() {
+        List<ProductDTO> productDTOList = productRepository.findAll().stream().map(entityDTOMapper::mapProductToDTO).collect(Collectors.toList());
+        return ResponseDTO.builder().status(200).message("상품 목록 조회 성공").data(productDTOList).build();
     }
 
     @Transactional(readOnly = true)
-    public Response getProductsByCategory(Long categoryId) {
+    public ResponseDTO getProductsByCategory(Long categoryId) {
         List<Product> products = productRepository.findByCategoryId(categoryId);
         if (products.isEmpty()) {
-            throw new NotFoundException("No Products found form this category");
+            throw new NotFoundException("카테고리에 상품 목록이 없습니다.");
         }
-        List<ProductDTO> productDTOList = products.stream().map(entityDTOMapper::mapProductToDTOBasic).collect(Collectors.toList());
-
-        return Response.builder().status(200).productList(productDTOList).build();
+        List<ProductDTO> productDTOList = products.stream().map(entityDTOMapper::mapProductToDTO).collect(Collectors.toList());
+        return ResponseDTO.builder().status(200).message("카테고리의 상품 목록 조회 성공").data(productDTOList).build();
     }
 
     @Transactional(readOnly = true)
-    public Response searchProduct(String searchValue) {
+    public ResponseDTO searchProduct(String searchValue) {
         List<Product> products = productRepository.findByNameContainingOrDescriptionContaining(searchValue, searchValue);
-
         if (products.isEmpty()) {
-            throw new NotFoundException("No Products Found");
+            throw new NotFoundException("상품이 없습니다.");
         }
-
-        List<ProductDTO> productDTOList = products.stream().map(entityDTOMapper::mapProductToDTOBasic).collect(Collectors.toList());
-
-        return Response.builder().status(200).productList(productDTOList).build();
+        List<ProductDTO> productDTOList = products.stream().map(entityDTOMapper::mapProductToDTO).collect(Collectors.toList());
+        return ResponseDTO.builder().status(200).message("상품 검색 성공").data(productDTOList).build();
     }
 
 }

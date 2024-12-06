@@ -14,28 +14,23 @@ public class LocalStorageService {
 
     public String saveImageToLocal(MultipartFile photo) {
         try {
-            // Check if upload directory exists, if not, create it
             File directory = new File(uploadDirectory);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
-            // Generate a unique file name to avoid conflicts
             String originalFileName = photo.getOriginalFilename();
             String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
             String uniqueFileName = UUID.randomUUID() + fileExtension;
 
-            // Define the full path where the file will be stored
             File file = new File(directory, uniqueFileName);
 
-            // Save the file to the local storage
             photo.transferTo(file);
-
-            // Return the relative path or URL to the uploaded file
+            
             return "/uploads/" + uniqueFileName;
 
         } catch (IOException e) {
-            throw new RuntimeException("Unable to upload image: " + e.getMessage());
+            throw new RuntimeException("이미지 업로드 실패: " + e.getMessage());
         }
     }
 }

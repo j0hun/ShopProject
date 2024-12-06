@@ -1,6 +1,6 @@
 package com.jyhun.shop.controller;
 
-import com.jyhun.shop.dto.Response;
+import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.exception.InvalidCredentialsException;
 import com.jyhun.shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class ProductController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> createProduct(
+    public ResponseEntity<ResponseDTO> createProduct(
             @RequestParam Long categoryId,
             @RequestParam MultipartFile image,
             @RequestParam String name,
@@ -26,14 +26,14 @@ public class ProductController {
             @RequestParam Long price
     ) {
         if (categoryId == null || image.isEmpty() || name.isEmpty() || description.isEmpty() || price == null) {
-            throw new InvalidCredentialsException("All Fields are Required");
+            throw new InvalidCredentialsException("모든 필드가 필요합니다.");
         }
         return ResponseEntity.ok(productService.createProduct(categoryId, image, name, description, price));
     }
 
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> updateProduct(
+    public ResponseEntity<ResponseDTO> updateProduct(
             @RequestParam Long productId,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) MultipartFile image,
@@ -46,27 +46,27 @@ public class ProductController {
 
     @DeleteMapping("/delete/{productId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> deleteProduct(@PathVariable Long productId) {
+    public ResponseEntity<ResponseDTO> deleteProduct(@PathVariable Long productId) {
         return ResponseEntity.ok(productService.deleteProduct(productId));
     }
 
     @GetMapping("/get-by-product-id/{productId}")
-    public ResponseEntity<Response> getProductById(@PathVariable Long productId) {
+    public ResponseEntity<ResponseDTO> getProductById(@PathVariable Long productId) {
         return ResponseEntity.ok(productService.getProductById(productId));
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<Response> getAllProducts() {
+    public ResponseEntity<ResponseDTO> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/get-by-category-id/{categoryId}")
-    public ResponseEntity<Response> getProductsByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<ResponseDTO> getProductsByCategory(@PathVariable Long categoryId) {
         return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Response> searchForProduct(@RequestParam String searchValue) {
+    public ResponseEntity<ResponseDTO> searchForProduct(@RequestParam String searchValue) {
         return ResponseEntity.ok(productService.searchProduct(searchValue));
     }
 
