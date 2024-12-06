@@ -1,7 +1,7 @@
 package com.jyhun.shop.controller;
 
 import com.jyhun.shop.dto.OrderRequest;
-import com.jyhun.shop.dto.Response;
+import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.service.OrderItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ public class OrderItemController {
     private final OrderItemService orderItemService;
 
     @PostMapping("/create")
-    public ResponseEntity<Response> createOrder(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<ResponseDTO> createOrder(@RequestBody OrderRequest orderRequest) {
         return ResponseEntity.ok(orderItemService.createOrder(orderRequest));
     }
 

@@ -1,7 +1,7 @@
 package com.jyhun.shop.service;
 
 import com.jyhun.shop.dto.OrderRequest;
-import com.jyhun.shop.dto.Response;
+import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.entity.Order;
 import com.jyhun.shop.entity.OrderItem;
 import com.jyhun.shop.entity.Product;
@@ -30,7 +30,7 @@ public class OrderItemService {
     private final UserService userService;
     private final EntityDTOMapper entityDTOMapper;
 
-    public Response createOrder(OrderRequest orderRequest) {
+    public ResponseDTO createOrder(OrderRequest orderRequest) {
 
         User user = userService.getLoginUser();
 
@@ -59,7 +59,7 @@ public class OrderItemService {
 
         orderRepository.save(order);
 
-        return Response.builder()
+        return ResponseDTO.builder()
                 .status(200)
                 .message("Order was successfully placed")
                 .build();

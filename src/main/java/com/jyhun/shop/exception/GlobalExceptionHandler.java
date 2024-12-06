@@ -1,6 +1,6 @@
 package com.jyhun.shop.exception;
 
-import com.jyhun.shop.dto.Response;
+import com.jyhun.shop.dto.ResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Response> handleAllException(Exception ex) {
-        Response response = Response.builder()
+    public ResponseEntity<ResponseDTO> handleAllException(Exception ex) {
+        ResponseDTO response = ResponseDTO.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .message(ex.getMessage())
                 .build();
@@ -19,8 +19,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Response> handleNotFoundException(NotFoundException ex) {
-        Response response = Response.builder()
+    public ResponseEntity<ResponseDTO> handleNotFoundException(NotFoundException ex) {
+        ResponseDTO response = ResponseDTO.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(ex.getMessage())
                 .build();
@@ -28,8 +28,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<Response> handleInvalidCredentialsException(InvalidCredentialsException ex) {
-        Response response = Response.builder()
+    public ResponseEntity<ResponseDTO> handleInvalidCredentialsException(InvalidCredentialsException ex) {
+        ResponseDTO response = ResponseDTO.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(ex.getMessage())
                 .build();
