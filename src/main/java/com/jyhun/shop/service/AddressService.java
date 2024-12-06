@@ -34,7 +34,6 @@ public class AddressService {
         return ResponseDTO.builder()
                 .status(200)
                 .message(message)
-                .data(null)
                 .build();
     }
 

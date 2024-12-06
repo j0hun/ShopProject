@@ -28,11 +28,11 @@ public class EntityDTOMapper {
                 .build();
     }
 
-    public CategoryDTO mapCategoryToDTOBasic(Category category) {
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setId(category.getId());
-        categoryDTO.setName(category.getName());
-        return categoryDTO;
+    public CategoryResponseDTO mapCategoryToDTO(Category category) {
+        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+        categoryResponseDTO.setId(category.getId());
+        categoryResponseDTO.setName(category.getName());
+        return categoryResponseDTO;
     }
 
     public OrderItemDTO mapOrderItemToDTOBasic(OrderItem orderItem) {

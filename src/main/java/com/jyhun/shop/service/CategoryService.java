@@ -1,7 +1,8 @@
 package com.jyhun.shop.service;
 
-import com.jyhun.shop.dto.CategoryDTO;
-import com.jyhun.shop.dto.Response;
+import com.jyhun.shop.dto.CategoryRequestDTO;
+import com.jyhun.shop.dto.CategoryResponseDTO;
+import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.entity.Category;
 import com.jyhun.shop.exception.NotFoundException;
 import com.jyhun.shop.mapper.EntityDTOMapper;
@@ -21,56 +22,29 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final EntityDTOMapper entityDTOMapper;
 
-    public Response createCategory(CategoryDTO categoryDTO) {
-        Category category = new Category();
-        category.setName(categoryDTO.getName());
+    public ResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) {
+        Category category = Category.builder().name(categoryRequestDTO.getName()).build();
         categoryRepository.save(category);
-        return Response.builder()
-                .status(200)
-                .message("Category created successfully")
-                .build();
+        return ResponseDTO.builder().status(200).message("카테고리 생성 성공").build();
     }
 
-    public Response updateCategory(Long categoryId, CategoryDTO categoryDTO) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("Category Not Found"));
-        category.setName(categoryDTO.getName());
-        categoryRepository.save(category);
-        return Response.builder()
-                .status(200)
-                .message("category updated successfully")
-                .build();
+    public ResponseDTO updateCategory(Long categoryId, CategoryRequestDTO categoryRequestDTO) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("카테고리 조회 실패"));
+        category.updateCategory(categoryRequestDTO.getName());
+        return ResponseDTO.builder().status(200).message("카테고리 수정 성공").build();
     }
 
     @Transactional(readOnly = true)
-    public Response getAllCategories() {
+    public ResponseDTO getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
-        List<CategoryDTO> categoryDTOList = categories.stream()
-                .map(entityDTOMapper::mapCategoryToDTOBasic)
-                .collect(Collectors.toList());
-
-        return Response.builder()
-                .status(200)
-                .categoryList(categoryDTOList)
-                .build();
+        List<CategoryResponseDTO> categoryDTOList = categories.stream().map(entityDTOMapper::mapCategoryToDTO).collect(Collectors.toList());
+        return ResponseDTO.builder().status(200).message("카테고리 목록 조회 성공").data(categoryDTOList).build();
     }
 
-    @Transactional(readOnly = true)
-    public Response getCategoryById(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("Category Not Found"));
-        CategoryDTO categoryDTO = entityDTOMapper.mapCategoryToDTOBasic(category);
-        return Response.builder()
-                .status(200)
-                .category(categoryDTO)
-                .build();
-    }
-
-    public Response deleteCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("Category Not Found"));
+    public ResponseDTO deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("카테고리 조회 실패"));
         categoryRepository.delete(category);
-        return Response.builder()
-                .status(200)
-                .message("Category was deleted successfully")
-                .build();
+        return ResponseDTO.builder().status(200).message("카테고리 삭제 성공").build();
     }
 
 }

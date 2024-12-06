@@ -7,13 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO {
+public class CategoryRequestDTO {
 
-    private Long id;
     private String name;
-    private String description;
-    private Long price;
-    private String imageUrl;
-    private CategoryResponseDTO category;
 
 }
