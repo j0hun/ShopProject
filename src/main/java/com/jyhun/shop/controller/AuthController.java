@@ -1,8 +1,8 @@
 package com.jyhun.shop.controller;
 
-import com.jyhun.shop.dto.LoginRequest;
-import com.jyhun.shop.dto.Response;
-import com.jyhun.shop.dto.UserDTO;
+import com.jyhun.shop.dto.LoginDTO;
+import com.jyhun.shop.dto.RegisterDTO;
+import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +19,12 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<Response> registerUser(@RequestBody UserDTO userDTO){
-        return ResponseEntity.ok(userService.register(userDTO));
+    public ResponseEntity<ResponseDTO> registerUser(@RequestBody RegisterDTO registerDTO){
+        return ResponseEntity.ok(userService.register(registerDTO));
     }
     @PostMapping("/login")
-    public ResponseEntity<Response> loginUser(@RequestBody LoginRequest loginRequest){
-        return ResponseEntity.ok(userService.loginUser(loginRequest));
+    public ResponseEntity<ResponseDTO> loginUser(@RequestBody LoginDTO loginDTO){
+        return ResponseEntity.ok(userService.loginUser(loginDTO));
     }
 
 }

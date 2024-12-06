@@ -1,7 +1,7 @@
 package com.jyhun.shop.controller;
 
 import com.jyhun.shop.dto.AddressRequestDTO;
-import com.jyhun.shop.dto.ResultDTO;
+import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ public class AddressController {
     private final AddressService addressService;
 
     @PostMapping("/save")
-    public ResponseEntity<ResultDTO> saveAndUpdateAddress(@RequestBody AddressRequestDTO addressRequestDTO) {
+    public ResponseEntity<ResponseDTO> saveAndUpdateAddress(@RequestBody AddressRequestDTO addressRequestDTO) {
         return ResponseEntity.ok(addressService.saveAndUpdateAddress(addressRequestDTO));
     }
 

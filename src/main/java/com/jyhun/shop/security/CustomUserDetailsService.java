@@ -21,8 +21,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new NotFoundException("이메일을 찾을수 없습니다."));
 
-        return AuthUser.builder()
-                .user(user)
-                .build();
+        return new AuthUser(user);
     }
 }

@@ -5,9 +5,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ResultDTO<T> {
+public class ResponseDTO<T> {
 
     private int status;
     private String message;
-    private T dto;
+    private T data;
+
 }

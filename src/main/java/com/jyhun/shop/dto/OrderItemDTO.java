@@ -13,7 +13,7 @@ public class OrderItemDTO {
     private int quantity;
     private Long price;
     private String status;
-    private UserDTO user;
+    private UserResponseDTO user;
     private ProductDTO product;
 
 }

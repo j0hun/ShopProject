@@ -1,7 +1,7 @@
 package com.jyhun.shop.service;
 
 import com.jyhun.shop.dto.AddressRequestDTO;
-import com.jyhun.shop.dto.ResultDTO;
+import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.entity.Address;
 import com.jyhun.shop.entity.User;
 import com.jyhun.shop.repository.AddressRepository;
@@ -17,7 +17,7 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final UserService userService;
 
-    public ResultDTO<Void> saveAndUpdateAddress(AddressRequestDTO addressRequestDTO) {
+    public ResponseDTO saveAndUpdateAddress(AddressRequestDTO addressRequestDTO) {
         User user = userService.getLoginUser();
         Address currentAddress = user.getAddress();
 
@@ -31,10 +31,10 @@ public class AddressService {
 
         String message = (user.getAddress() == null) ? "주소 생성 성공" : "주소 변경 성공";
 
-        return ResultDTO.<Void>builder()
+        return ResponseDTO.builder()
                 .status(200)
                 .message(message)
-                .dto(null)
+                .data(null)
                 .build();
     }
 

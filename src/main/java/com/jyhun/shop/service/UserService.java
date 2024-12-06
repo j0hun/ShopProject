@@ -1,8 +1,6 @@
 package com.jyhun.shop.service;
 
-import com.jyhun.shop.dto.LoginRequest;
-import com.jyhun.shop.dto.Response;
-import com.jyhun.shop.dto.UserDTO;
+import com.jyhun.shop.dto.*;
 import com.jyhun.shop.entity.User;
 import com.jyhun.shop.enums.Role;
 import com.jyhun.shop.exception.InvalidCredentialsException;
@@ -28,42 +26,33 @@ public class UserService {
     private final JwtService jwtService;
     private final EntityDTOMapper entityDTOMapper;
 
-    public Response register(UserDTO userDTO) {
-        Role role = Role.USER;
-
-        if (userDTO.getRole() != null && userDTO.getRole().equalsIgnoreCase("admin")) {
-            role = Role.ADMIN;
-        }
-
+    public ResponseDTO register(RegisterDTO registerDTO) {
         User user = User.builder()
-                .name(userDTO.getName())
-                .email(userDTO.getEmail())
-                .password(passwordEncoder.encode(userDTO.getPassword()))
-                .phoneNumber(userDTO.getPhoneNumber())
-                .role(role)
+                .name(registerDTO.getName())
+                .email(registerDTO.getEmail())
+                .password(passwordEncoder.encode(registerDTO.getPassword()))
+                .phoneNumber(registerDTO.getPhoneNumber())
+                .role(Role.USER)
                 .build();
 
-        User savedUser = userRepository.save(user);
-
-        UserDTO userDTO1 = entityDTOMapper.mapUserToDTOBasic(savedUser);
-        return Response.builder()
+        userRepository.save(user);
+        return ResponseDTO.builder()
                 .status(200)
-                .message("User Add")
-                .user(userDTO1)
+                .message("회원 가입 성공")
                 .build();
     }
 
-    public Response loginUser(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("이메일을 찾을 수 없습니다."));
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+    public ResponseDTO loginUser(LoginDTO loginDTO) {
+        User user = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(() -> new NotFoundException("이메일을 찾을 수 없습니다."));
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("패스워드가 맞지 않습니다.");
         }
         String token = jwtService.generateToken(user);
-        return Response.builder()
+        AuthDTO authDTO = new AuthDTO(token, user.getRole().name());
+        return ResponseDTO.builder()
                 .status(200)
-                .message("User Login")
-                .token(token)
-                .role(user.getRole().name())
+                .message("로그인 성공")
+                .data(authDTO)
                 .build();
     }
 
@@ -76,13 +65,14 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Response getUserInfoAndOrderHistory() {
+    public ResponseDTO getUserInfo() {
         User user = getLoginUser();
-        UserDTO userDTO = entityDTOMapper.mapUserToDTOPlusAddressAndOrderHistory(user);
+        UserResponseDTO userResponseDTO = entityDTOMapper.mapUserToDTOPlusAddressAndOrderHistory(user);
 
-        return Response.builder()
+        return ResponseDTO.builder()
                 .status(200)
-                .user(userDTO)
+                .message("유저 조회 성공")
+                .data(userResponseDTO)
                 .build();
     }
 

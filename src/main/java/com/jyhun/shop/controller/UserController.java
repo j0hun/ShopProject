@@ -1,6 +1,6 @@
 package com.jyhun.shop.controller;
 
-import com.jyhun.shop.dto.Response;
+import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/my-info")
-    public ResponseEntity<Response> getUserInfoAndOrderHistory(){
-        return ResponseEntity.ok(userService.getUserInfoAndOrderHistory());
+    public ResponseEntity<ResponseDTO> getUserInfoAndOrderHistory(){
+        return ResponseEntity.ok(userService.getUserInfo());
     }
 
 }

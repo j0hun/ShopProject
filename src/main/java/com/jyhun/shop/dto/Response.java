@@ -21,8 +21,8 @@ public class Response {
 
     private AddressRequestDTO address;
 
-    private UserDTO user;
-    private List<UserDTO> userList;
+    private UserResponseDTO user;
+    private List<UserResponseDTO> userList;
 
     private CategoryDTO category;
     private List<CategoryDTO> categoryList;
