@@ -30,13 +30,13 @@ public class User {
     private Role role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderItem> orderItemList;
+    private List<Order> orderList;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "address_id")
     private Address address;
 
-    public void changeAddress(Address newAddress) {
-        this.address = newAddress;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

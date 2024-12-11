@@ -35,13 +35,14 @@ public class EntityDTOMapper {
         return categoryResponseDTO;
     }
 
-    public OrderItemDTO mapOrderItemToDTOBasic(OrderItem orderItem) {
-        OrderItemDTO orderItemDTO = new OrderItemDTO();
-        orderItemDTO.setId(orderItemDTO.getId());
-        orderItemDTO.setQuantity(orderItem.getQuantity());
-        orderItemDTO.setPrice(orderItem.getPrice());
-        orderItemDTO.setStatus(orderItem.getStatus().name());
-        return orderItemDTO;
+    public OrderItemResponseDTO mapOrderItemToDTO(OrderItem orderItem) {
+        OrderItemResponseDTO orderItemResponseDTO = new OrderItemResponseDTO();
+        orderItemResponseDTO.setId(orderItem.getId());
+        orderItemResponseDTO.setQuantity(orderItem.getQuantity());
+        orderItemResponseDTO.setPrice(orderItem.getPrice());
+        orderItemResponseDTO.setStatus(orderItem.getStatus().name());
+        orderItemResponseDTO.setProduct(mapProductToDTO(orderItem.getProduct()));
+        return orderItemResponseDTO;
     }
 
     public ProductDTO mapProductToDTO(Product product) {
@@ -64,21 +65,41 @@ public class EntityDTOMapper {
         return userResponseDTO;
     }
 
-    public OrderItemDTO mapOrderItemToDTOPlusProduct(OrderItem orderItem) {
-        OrderItemDTO orderItemDTO = mapOrderItemToDTOBasic(orderItem);
+    public OrderItemResponseDTO mapOrderItemToDTOPlusProduct(OrderItem orderItem) {
+        OrderItemResponseDTO orderItemResponseDTO = mapOrderItemToDTO(orderItem);
         if (orderItem.getOrder() != null) {
             ProductDTO productDTO = mapProductToDTO(orderItem.getProduct());
-            orderItemDTO.setProduct(productDTO);
+            orderItemResponseDTO.setProduct(productDTO);
         }
-        return orderItemDTO;
+        return orderItemResponseDTO;
+    }
+
+    public OrderItemResponseDTO mapOrderItemToDTOPlusOrderItem(OrderItem orderItem) {
+        OrderItemResponseDTO orderItemResponseDTO = mapOrderItemToDTO(orderItem);
+        if (orderItem.getOrder() != null) {
+            ProductDTO productDTO = mapProductToDTO(orderItem.getProduct());
+            orderItemResponseDTO.setProduct(productDTO);
+        }
+        return orderItemResponseDTO;
+    }
+
+    private OrderResponseDTO mapOrderToDTO(Order order) {
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
+        orderResponseDTO.setId(order.getId());
+        orderResponseDTO.setTotalPrice(order.getTotalPrice());
+        orderResponseDTO.setOrderItemList(order.getOrderItemList()
+                .stream()
+                .map(this::mapOrderItemToDTO)
+                .collect(Collectors.toList()));
+        return orderResponseDTO;
     }
 
     public UserResponseDTO mapUserToDTOPlusAddressAndOrderHistory(User user) {
         UserResponseDTO userResponseDTO = mapUserToDTOPlusAddress(user);
-        if (user.getOrderItemList() != null && !user.getOrderItemList().isEmpty()) {
-            userResponseDTO.setOrderItemList(user.getOrderItemList()
+        if (user.getOrderList() != null && !user.getOrderList().isEmpty()) {
+            userResponseDTO.setOrderList(user.getOrderList()
                     .stream()
-                    .map(this::mapOrderItemToDTOPlusProduct)
+                    .map(this::mapOrderToDTO)
                     .collect(Collectors.toList()));
         }
         return userResponseDTO;

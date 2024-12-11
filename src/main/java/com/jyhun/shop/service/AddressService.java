@@ -23,7 +23,7 @@ public class AddressService {
 
         if(currentAddress == null) {
             Address newAddress = createNewAddress(addressRequestDTO);
-            user.changeAddress(newAddress);
+            user.setAddress(newAddress);
             addressRepository.save(newAddress);
         }else {
             updateAddress(addressRequestDTO, currentAddress);
