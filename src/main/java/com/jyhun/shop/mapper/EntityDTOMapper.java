@@ -4,6 +4,7 @@ import com.jyhun.shop.dto.*;
 import com.jyhun.shop.entity.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -103,6 +104,20 @@ public class EntityDTOMapper {
                     .collect(Collectors.toList()));
         }
         return userResponseDTO;
+    }
+
+    public CartResponseDTO mapCartToDTO(Cart cart) {
+        CartResponseDTO cartResponseDTO = new CartResponseDTO();
+        cartResponseDTO.setId(cart.getId());
+        cartResponseDTO.setProduct(mapProductToDTO(cart.getProduct()));
+        cartResponseDTO.setQuantity(cart.getQuantity());
+        cartResponseDTO.setPrice(cart.getPrice());
+        return cartResponseDTO;
+    }
+
+    public List<CartResponseDTO> mapCartListToDTO(List<Cart> cartList) {
+        return cartList.stream().map(this::mapCartToDTO)
+                .collect(Collectors.toList());
     }
 
 }
