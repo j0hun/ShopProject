@@ -26,6 +26,8 @@ public class User {
 
     private String phoneNumber;
 
+    private Long balance;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -39,4 +41,9 @@ public class User {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    public void updateBalance(Long balance) {
+        this.balance = balance;
+    }
+
 }
