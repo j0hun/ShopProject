@@ -33,6 +33,7 @@ public class UserService {
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
                 .phoneNumber(registerDTO.getPhoneNumber())
                 .role(Role.USER)
+                .balance(0L)
                 .build();
 
         userRepository.save(user);

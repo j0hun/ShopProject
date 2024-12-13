@@ -16,6 +16,7 @@ public class UserResponseDTO {
     private String name;
     private String phoneNumber;
     private String role;
+    private Long balance;
     private List<OrderResponseDTO> orderList;
     private AddressResponseDTO address;
 
