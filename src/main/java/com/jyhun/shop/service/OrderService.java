@@ -2,10 +2,7 @@ package com.jyhun.shop.service;
 
 import com.jyhun.shop.dto.OrderRequestDTO;
 import com.jyhun.shop.dto.ResponseDTO;
-import com.jyhun.shop.entity.Order;
-import com.jyhun.shop.entity.OrderItem;
-import com.jyhun.shop.entity.Product;
-import com.jyhun.shop.entity.User;
+import com.jyhun.shop.entity.*;
 import com.jyhun.shop.enums.OrderStatus;
 import com.jyhun.shop.exception.NotFoundException;
 import com.jyhun.shop.repository.OrderRepository;
@@ -24,6 +21,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserService userService;
+    private final PaymentService paymentService;
 
     @Transactional
     public ResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
@@ -52,7 +50,14 @@ public class OrderService {
                 .totalPrice(totalPrice)
                 .build();
 
+        user.updateBalance(user.getBalance() - order.getTotalPrice());
+
         orderItems.forEach(order::addOrderItem);
+
+        Payment payment = paymentService.createPayment(totalPrice);
+
+        order.changePayment(payment);
+
         orderRepository.save(order);
 
         return ResponseDTO.builder()

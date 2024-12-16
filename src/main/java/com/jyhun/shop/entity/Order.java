@@ -28,11 +28,19 @@ public class Order {
     @Builder.Default
     private List<OrderItem> orderItemList = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
+
     public void addOrderItem(OrderItem orderItem) {
         if (orderItem != null) {
             this.orderItemList.add(orderItem);
             orderItem.setOrder(this);
         }
+    }
+
+    public void changePayment(Payment payment) {
+        this.payment = payment;
     }
 
 }
