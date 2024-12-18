@@ -24,9 +24,9 @@ public class EntityDTOMapper {
     public AddressResponseDTO mapAddressToDTO(Address address) {
         return AddressResponseDTO.builder()
                 .id(address.getId())
-                .city(address.getCity())
-                .street(address.getStreet())
-                .zipCode(address.getZipCode())
+                .baseAddress(address.getBaseAddress())
+                .detailAddress(address.getDetailAddress())
+                .postalCode(address.getPostalCode())
                 .build();
     }
 

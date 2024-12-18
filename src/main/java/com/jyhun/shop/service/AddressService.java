@@ -39,17 +39,17 @@ public class AddressService {
 
     private Address createNewAddress(AddressRequestDTO addressRequestDTO) {
         return Address.builder()
-                .city(addressRequestDTO.getCity())
-                .street(addressRequestDTO.getStreet())
-                .zipCode(addressRequestDTO.getZipCode())
+                .baseAddress(addressRequestDTO.getBaseAddress())
+                .detailAddress(addressRequestDTO.getDetailAddress())
+                .postalCode(addressRequestDTO.getPostalCode())
                 .build();
     }
 
     private static void updateAddress(AddressRequestDTO addressRequestDTO, Address currentAddress) {
         currentAddress.updateAddress(
-                addressRequestDTO.getCity(),
-                addressRequestDTO.getStreet(),
-                addressRequestDTO.getZipCode()
+                addressRequestDTO.getBaseAddress(),
+                addressRequestDTO.getDetailAddress(),
+                addressRequestDTO.getPostalCode()
         );
     }
 

@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 public class AddressResponseDTO {
 
     private Long id;
-    private String city;
-    private String street;
-    private String zipCode;
+    private String baseAddress;
+    private String detailAddress;
+    private String postalCode;
 
 }

@@ -15,14 +15,14 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String city;
-    private String street;
-    private String zipCode;
+    private String baseAddress;
+    private String detailAddress;
+    private String postalCode;
 
-    public void updateAddress(String city, String street, String zipCode) {
-        if (city != null) this.city = city;
-        if (street != null) this.street = street;
-        if (zipCode != null) this.zipCode = zipCode;
+    public void updateAddress(String baseAddress, String detailAddress, String postalCode) {
+        if (baseAddress != null) this.baseAddress = baseAddress;
+        if (detailAddress != null) this.detailAddress = detailAddress;
+        if (postalCode != null) this.postalCode = postalCode;
     }
 
 }
