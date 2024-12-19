@@ -35,6 +35,13 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
+    public ResponseDTO getCategoryById(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("카테고리 조회 실패"));
+        CategoryResponseDTO categoryResponseDTO = entityDTOMapper.mapCategoryToDTO(category);
+        return ResponseDTO.builder().status(200).message("카테고리 조회 성공").data(categoryResponseDTO).build();
+    }
+
+    @Transactional(readOnly = true)
     public ResponseDTO getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         List<CategoryResponseDTO> categoryDTOList = categories.stream().map(entityDTOMapper::mapCategoryToDTO).collect(Collectors.toList());
@@ -46,5 +53,4 @@ public class CategoryService {
         categoryRepository.delete(category);
         return ResponseDTO.builder().status(200).message("카테고리 삭제 성공").build();
     }
-
 }
