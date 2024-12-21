@@ -24,6 +24,7 @@ public class OrderService {
     private final PaymentService paymentService;
 
     @Transactional
+
     public ResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
 
         User user = userService.getLoginUser();
@@ -31,6 +32,8 @@ public class OrderService {
         List<OrderItem> orderItems = orderRequestDTO.getItems().stream().map(orderItemRequest -> {
             Product product = productRepository.findById(orderItemRequest.getProductId())
                     .orElseThrow(() -> new NotFoundException("상품 조회 실패"));
+
+            product.decreaseStock(orderItemRequest.getQuantity());
 
             OrderItem orderItem = OrderItem.builder()
                     .product(product)

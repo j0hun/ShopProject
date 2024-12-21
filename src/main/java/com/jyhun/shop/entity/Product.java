@@ -23,16 +23,27 @@ public class Product {
 
     private Long price;
 
+    private Long stock;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public void updateProduct(String name, String description, String imageUrl, Long price, Category category) {
+    public void updateProduct(String name, String description, String imageUrl, Long price, Long stock, Category category) {
         if (name != null) this.name = name;
         if (price != null) this.price = price;
+        if (stock != null) this.stock = stock;
         if (description != null) this.description = description;
         if (imageUrl != null) this.imageUrl = imageUrl;
         if (category != null) this.category = category;
     }
+
+    public void decreaseStock(int quantity) {
+        if (this.stock < quantity) {
+            throw new IllegalStateException("재고가 부족합니다.");
+        }
+        this.stock -= quantity;
+    }
+
 
 }

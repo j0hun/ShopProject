@@ -26,7 +26,7 @@ public class ProductService {
     private final EntityDTOMapper entityDTOMapper;
     private final LocalStorageService localStorageService;
 
-    public ResponseDTO createProduct(Long categoryId, MultipartFile image, String name, String description, Long price) {
+    public ResponseDTO createProduct(Long categoryId, MultipartFile image, String name, String description, Long price,Long stock) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("카테고리 조회 실패"));
         String productImageUrl = localStorageService.saveImageToLocal(image);
 
@@ -36,13 +36,14 @@ public class ProductService {
                 .name(name)
                 .description(description)
                 .imageUrl(productImageUrl)
+                .stock(stock)
                 .build();
 
         productRepository.save(product);
         return ResponseDTO.builder().status(200).message("상품 생성 성공").build();
     }
 
-    public ResponseDTO updateProduct(Long productId, Long categoryId, MultipartFile image, String name, String description, Long price) {
+    public ResponseDTO updateProduct(Long productId, Long categoryId, MultipartFile image, String name, String description, Long price,Long stock) {
 
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("상품 조회 실패"));
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("카테고리 조회 실패"));
@@ -53,7 +54,7 @@ public class ProductService {
             productImageUrl = localStorageService.saveImageToLocal(image);
         }
 
-        product.updateProduct(name, description, productImageUrl, price, category);
+        product.updateProduct(name, description, productImageUrl, price,stock,category);
         return ResponseDTO.builder().status(200).message("상품 수정 성공").build();
     }
 

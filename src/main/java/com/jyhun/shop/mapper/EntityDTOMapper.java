@@ -54,6 +54,7 @@ public class EntityDTOMapper {
         productDTO.setDescription(product.getDescription());
         productDTO.setPrice(product.getPrice());
         productDTO.setImageUrl(product.getImageUrl());
+        productDTO.setStock(product.getStock());
         productDTO.setCategory(mapCategoryToDTO(product.getCategory()));
         return productDTO;
     }

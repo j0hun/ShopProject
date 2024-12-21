@@ -14,6 +14,7 @@ public class ProductDTO {
     private String description;
     private Long price;
     private String imageUrl;
+    private Long stock;
     private CategoryResponseDTO category;
 
 }
