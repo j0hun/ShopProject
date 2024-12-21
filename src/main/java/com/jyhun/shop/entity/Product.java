@@ -38,7 +38,7 @@ public class Product {
         if (category != null) this.category = category;
     }
 
-    public void decreaseStock(int quantity) {
+    public void decreaseStock(Long quantity) {
         if (this.stock < quantity) {
             throw new IllegalStateException("재고가 부족합니다.");
         }

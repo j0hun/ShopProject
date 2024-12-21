@@ -7,7 +7,7 @@ public class CartResponseDTO {
 
     private Long id;
     private ProductDTO product;
-    private int quantity;
+    private Long quantity;
     private Long price;
 
 }

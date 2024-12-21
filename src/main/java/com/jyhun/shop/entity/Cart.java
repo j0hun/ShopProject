@@ -23,11 +23,11 @@ public class Cart {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private int quantity;
+    private Long quantity;
 
     private Long price;
 
-    public void updateQuantity(int quantity) {
+    public void updateQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
