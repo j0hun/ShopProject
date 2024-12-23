@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/my-info")
-    public ResponseEntity<ResponseDTO> getUserInfoAndOrderHistory(){
+    public ResponseEntity<ResponseDTO> getUserInfo(){
         return ResponseEntity.ok(userService.getUserInfo());
     }
 

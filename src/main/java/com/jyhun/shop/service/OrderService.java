@@ -1,11 +1,13 @@
 package com.jyhun.shop.service;
 
 import com.jyhun.shop.dto.OrderRequestDTO;
+import com.jyhun.shop.dto.OrderResponseDTO;
 import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.entity.*;
 import com.jyhun.shop.enums.OrderStatus;
 import com.jyhun.shop.exception.InsufficientBalanceException;
 import com.jyhun.shop.exception.NotFoundException;
+import com.jyhun.shop.mapper.EntityDTOMapper;
 import com.jyhun.shop.repository.CartRepository;
 import com.jyhun.shop.repository.OrderRepository;
 import com.jyhun.shop.repository.ProductRepository;
@@ -25,6 +27,7 @@ public class OrderService {
     private final UserService userService;
     private final PaymentService paymentService;
     private final CartRepository cartRepository;
+    private final EntityDTOMapper entityDTOMapper;
 
     @Transactional
     public ResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
@@ -69,7 +72,7 @@ public class OrderService {
                 .collect(Collectors.toList());
 
         List<Cart> cartList = cartRepository.findAllByProductIdInAndUserId(productIds, user.getId());
-        if(cartList.isEmpty()) {
+        if (cartList.isEmpty()) {
             throw new NotFoundException("장바구니 조회 실패");
         }
         cartRepository.deleteAll(cartList);
@@ -82,4 +85,17 @@ public class OrderService {
 
     }
 
+    @Transactional(readOnly = true)
+    public ResponseDTO getOrderHistory() {
+        User user = userService.getLoginUser();
+        List<Order> orderList = orderRepository.findAllByUserId(user.getId());
+        List<OrderResponseDTO> orderResponseDTOList = entityDTOMapper.mapOrderListToDTOList(orderList);
+
+        return ResponseDTO.builder()
+                .status(200)
+                .message("주문내역 조회 성공")
+                .data(orderResponseDTOList)
+                .build();
+
+    }
 }

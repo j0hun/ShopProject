@@ -5,10 +5,7 @@ import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
@@ -20,6 +17,11 @@ public class OrderController {
     @PostMapping("/create")
     public ResponseEntity<ResponseDTO> createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
         return ResponseEntity.ok(orderService.createOrder(orderRequestDTO));
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<ResponseDTO> getOrderHistory() {
+        return ResponseEntity.ok(orderService.getOrderHistory());
     }
 
 }

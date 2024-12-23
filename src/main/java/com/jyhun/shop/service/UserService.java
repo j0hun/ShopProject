@@ -68,7 +68,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public ResponseDTO getUserInfo() {
         User user = getLoginUser();
-        UserResponseDTO userResponseDTO = entityDTOMapper.mapUserToDTOPlusAddressAndOrderHistory(user);
+        UserResponseDTO userResponseDTO = entityDTOMapper.mapUserToDTOPlusAddress(user);
 
         return ResponseDTO.builder()
                 .status(200)

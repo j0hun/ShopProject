@@ -52,7 +52,7 @@ public class CartService {
     public ResponseDTO getMyCart() {
         User user = userService.getLoginUser();
         List<Cart> cartList = cartRepository.findByUserId(user.getId());
-        List<CartResponseDTO> cartResponseDTOList = entityDTOMapper.mapCartListToDTO(cartList);
+        List<CartResponseDTO> cartResponseDTOList = entityDTOMapper.mapCartListToDTOList(cartList);
         return ResponseDTO.builder()
                 .status(200)
                 .message("내 장바구니 보기 성공")

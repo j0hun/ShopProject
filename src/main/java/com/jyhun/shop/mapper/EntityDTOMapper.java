@@ -77,15 +77,6 @@ public class EntityDTOMapper {
         return orderItemResponseDTO;
     }
 
-    public OrderItemResponseDTO mapOrderItemToDTOPlusOrderItem(OrderItem orderItem) {
-        OrderItemResponseDTO orderItemResponseDTO = mapOrderItemToDTO(orderItem);
-        if (orderItem.getOrder() != null) {
-            ProductDTO productDTO = mapProductToDTO(orderItem.getProduct());
-            orderItemResponseDTO.setProduct(productDTO);
-        }
-        return orderItemResponseDTO;
-    }
-
     private OrderResponseDTO mapOrderToDTO(Order order) {
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
         orderResponseDTO.setId(order.getId());
@@ -97,15 +88,9 @@ public class EntityDTOMapper {
         return orderResponseDTO;
     }
 
-    public UserResponseDTO mapUserToDTOPlusAddressAndOrderHistory(User user) {
-        UserResponseDTO userResponseDTO = mapUserToDTOPlusAddress(user);
-        if (user.getOrderList() != null && !user.getOrderList().isEmpty()) {
-            userResponseDTO.setOrderList(user.getOrderList()
-                    .stream()
-                    .map(this::mapOrderToDTO)
-                    .collect(Collectors.toList()));
-        }
-        return userResponseDTO;
+    public List<OrderResponseDTO> mapOrderListToDTOList(List<Order> orderList) {
+        return orderList.stream().map(this::mapOrderToDTO)
+                .collect(Collectors.toList());
     }
 
     public CartResponseDTO mapCartToDTO(Cart cart) {
@@ -117,7 +102,7 @@ public class EntityDTOMapper {
         return cartResponseDTO;
     }
 
-    public List<CartResponseDTO> mapCartListToDTO(List<Cart> cartList) {
+    public List<CartResponseDTO> mapCartListToDTOList(List<Cart> cartList) {
         return cartList.stream().map(this::mapCartToDTO)
                 .collect(Collectors.toList());
     }
