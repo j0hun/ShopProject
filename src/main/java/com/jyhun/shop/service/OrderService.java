@@ -4,7 +4,9 @@ import com.jyhun.shop.dto.OrderRequestDTO;
 import com.jyhun.shop.dto.ResponseDTO;
 import com.jyhun.shop.entity.*;
 import com.jyhun.shop.enums.OrderStatus;
+import com.jyhun.shop.exception.InsufficientBalanceException;
 import com.jyhun.shop.exception.NotFoundException;
+import com.jyhun.shop.repository.CartRepository;
 import com.jyhun.shop.repository.OrderRepository;
 import com.jyhun.shop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +24,9 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final UserService userService;
     private final PaymentService paymentService;
+    private final CartRepository cartRepository;
 
     @Transactional
-
     public ResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
 
         User user = userService.getLoginUser();
@@ -35,32 +37,42 @@ public class OrderService {
 
             product.decreaseStock(orderItemRequest.getQuantity());
 
-            OrderItem orderItem = OrderItem.builder()
+            return OrderItem.builder()
                     .product(product)
                     .quantity(orderItemRequest.getQuantity())
                     .price(product.getPrice())
                     .status(OrderStatus.COMPLETED)
                     .build();
-            return orderItem;
         }).collect(Collectors.toList());
 
         Long totalPrice = orderItems.stream()
                 .map(OrderItem::calculateTotalPrice)
                 .reduce(0L, Long::sum);
 
+        if (user.getBalance() < totalPrice) {
+            throw new InsufficientBalanceException("잔액이 부족합니다.");
+        }
+        user.updateBalance(user.getBalance() - totalPrice);
+
         Order order = Order.builder()
                 .user(user)
                 .totalPrice(totalPrice)
                 .build();
 
-        user.updateBalance(user.getBalance() - order.getTotalPrice());
-
         orderItems.forEach(order::addOrderItem);
 
         Payment payment = paymentService.createPayment(totalPrice);
-
         order.changePayment(payment);
 
+        List<Long> productIds = orderRequestDTO.getItems().stream()
+                .map(orderItemRequest -> orderItemRequest.getProductId())
+                .collect(Collectors.toList());
+
+        List<Cart> cartList = cartRepository.findAllByProductIdInAndUserId(productIds, user.getId());
+        if(cartList.isEmpty()) {
+            throw new NotFoundException("장바구니 조회 실패");
+        }
+        cartRepository.deleteAll(cartList);
         orderRepository.save(order);
 
         return ResponseDTO.builder()
