@@ -4,6 +4,7 @@ import com.jyhun.shop.dto.*;
 import com.jyhun.shop.entity.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,15 +69,6 @@ public class EntityDTOMapper {
         return userResponseDTO;
     }
 
-    public OrderItemResponseDTO mapOrderItemToDTOPlusProduct(OrderItem orderItem) {
-        OrderItemResponseDTO orderItemResponseDTO = mapOrderItemToDTO(orderItem);
-        if (orderItem.getOrder() != null) {
-            ProductDTO productDTO = mapProductToDTO(orderItem.getProduct());
-            orderItemResponseDTO.setProduct(productDTO);
-        }
-        return orderItemResponseDTO;
-    }
-
     private OrderResponseDTO mapOrderToDTO(Order order) {
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
         orderResponseDTO.setId(order.getId());
@@ -91,6 +83,18 @@ public class EntityDTOMapper {
     public List<OrderResponseDTO> mapOrderListToDTOList(List<Order> orderList) {
         return orderList.stream().map(this::mapOrderToDTO)
                 .collect(Collectors.toList());
+    }
+
+    public List<OrderItemResponseDTO> mapOrderItemListToOrderDTOList(List<Order> orderList) {
+        List<OrderResponseDTO> orderResponseDTOList = orderList.stream().map(this::mapOrderToDTO).collect(Collectors.toList());
+        List<OrderItemResponseDTO> orderItemResponseDTOList = new ArrayList<>();
+        for (OrderResponseDTO orderResponseDTO : orderResponseDTOList) {
+            List<OrderItemResponseDTO> orderItemList = orderResponseDTO.getOrderItemList();
+            for (OrderItemResponseDTO orderItemResponseDTO : orderItemList) {
+                orderItemResponseDTOList.add(orderItemResponseDTO);
+            }
+        }
+        return orderItemResponseDTOList;
     }
 
     public CartResponseDTO mapCartToDTO(Cart cart) {

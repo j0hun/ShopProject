@@ -24,4 +24,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrderHistory());
     }
 
+    @PostMapping("/item-cancel/{orderItemId}")
+    public ResponseEntity<ResponseDTO> cancelOrderItem(@PathVariable Long orderItemId) {
+        return ResponseEntity.ok(orderService.cancelOrderItem(orderItemId));
+    }
+
 }

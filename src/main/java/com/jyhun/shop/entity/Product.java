@@ -47,4 +47,7 @@ public class Product {
     }
 
 
+    public void increaseStock(Long quantity) {
+        this.stock += quantity;
+    }
 }

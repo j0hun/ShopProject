@@ -43,4 +43,7 @@ public class Order {
         this.payment = payment;
     }
 
+    public void updateTotalPrice(Long totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 }

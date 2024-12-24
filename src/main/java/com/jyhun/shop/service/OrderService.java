@@ -1,14 +1,13 @@
 package com.jyhun.shop.service;
 
-import com.jyhun.shop.dto.OrderRequestDTO;
-import com.jyhun.shop.dto.OrderResponseDTO;
-import com.jyhun.shop.dto.ResponseDTO;
+import com.jyhun.shop.dto.*;
 import com.jyhun.shop.entity.*;
 import com.jyhun.shop.enums.OrderStatus;
 import com.jyhun.shop.exception.InsufficientBalanceException;
 import com.jyhun.shop.exception.NotFoundException;
 import com.jyhun.shop.mapper.EntityDTOMapper;
 import com.jyhun.shop.repository.CartRepository;
+import com.jyhun.shop.repository.OrderItemRepository;
 import com.jyhun.shop.repository.OrderRepository;
 import com.jyhun.shop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +26,7 @@ public class OrderService {
     private final UserService userService;
     private final PaymentService paymentService;
     private final CartRepository cartRepository;
+    private final OrderItemRepository orderItemRepository;
     private final EntityDTOMapper entityDTOMapper;
 
     @Transactional
@@ -87,11 +87,44 @@ public class OrderService {
         User user = userService.getLoginUser();
         List<Order> orderList = orderRepository.findAllByUserId(user.getId());
         List<OrderResponseDTO> orderResponseDTOList = entityDTOMapper.mapOrderListToDTOList(orderList);
+        List<OrderItemResponseDTO> orderItemResponseDTOList = entityDTOMapper.mapOrderItemListToOrderDTOList(orderList);
 
         return ResponseDTO.builder()
                 .status(200)
-                .message("주문내역 조회 성공")
-                .data(orderResponseDTOList)
+                .message("주문 항목 내역 조회 성공")
+                .data(orderItemResponseDTOList)
+                .build();
+
+    }
+
+    @Transactional
+    public ResponseDTO cancelOrderItem(Long orderItemId) {
+        User user = userService.getLoginUser();
+
+        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+                .orElseThrow(() -> new NotFoundException("주문 항목 조회 실패"));
+
+        orderItem.cancel();
+
+        user.updateBalance(user.getBalance() + orderItem.calculateTotalPrice());
+
+        Product product = orderItem.getProduct();
+        product.increaseStock(orderItem.getQuantity());
+
+        Order order = orderRepository.findByOrderItemListId(orderItemId)
+                .orElseThrow(() -> new NotFoundException("주문 조회 실패"));
+
+        Long updatedTotalPrice = order.getOrderItemList().stream()
+                .filter(item -> item.getStatus() != OrderStatus.CANCELED)
+                .map(OrderItem::calculateTotalPrice)
+                .reduce(0L, Long::sum);
+
+        order.updateTotalPrice(updatedTotalPrice);
+        orderRepository.save(order);
+
+        return ResponseDTO.builder()
+                .status(200)
+                .message("주문 항목 취소 성공")
                 .build();
 
     }

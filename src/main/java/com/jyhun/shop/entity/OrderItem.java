@@ -39,4 +39,7 @@ public class OrderItem {
         this.order = order;
     }
 
+    public void cancel() {
+        this.status = OrderStatus.CANCELED;
+    }
 }
