@@ -1,5 +1,6 @@
 package com.jyhun.shop.entity;
 
+import com.jyhun.shop.exception.InsufficientStockException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,7 +41,7 @@ public class Product {
 
     public void decreaseStock(Long quantity) {
         if (this.stock < quantity) {
-            throw new IllegalStateException("재고가 부족합니다.");
+            throw new InsufficientStockException("재고가 부족합니다.");
         }
         this.stock -= quantity;
     }

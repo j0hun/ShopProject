@@ -41,9 +41,17 @@ public class GlobalExceptionHandler {
         ResponseDTO response = ResponseDTO.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(ex.getMessage())
-                .message(ex.getMessage())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ResponseDTO> handleInsufficientStockException(InsufficientStockException ex) {
+        ResponseDTO response = ResponseDTO.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
 }
