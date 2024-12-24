@@ -8,5 +8,6 @@ import java.util.List;
 public class OrderRequestDTO {
 
     private List<OrderItemRequest> items;
+    private String orderType;
 
 }

@@ -67,15 +67,12 @@ public class OrderService {
         Payment payment = paymentService.createPayment(totalPrice);
         order.changePayment(payment);
 
-        List<Long> productIds = orderRequestDTO.getItems().stream()
-                .map(orderItemRequest -> orderItemRequest.getProductId())
-                .collect(Collectors.toList());
-
-        List<Cart> cartList = cartRepository.findAllByProductIdInAndUserId(productIds, user.getId());
-        if (cartList.isEmpty()) {
-            throw new NotFoundException("장바구니 조회 실패");
+        if (orderRequestDTO.getOrderType().equals("cart")) {
+            List<Long> productIds = orderRequestDTO.getItems().stream()
+                    .map(orderItemRequest -> orderItemRequest.getProductId())
+                    .collect(Collectors.toList());
+            cartRepository.deleteByProductIdInAndUserId(productIds, user.getId());
         }
-        cartRepository.deleteAll(cartList);
         orderRepository.save(order);
 
         return ResponseDTO.builder()
