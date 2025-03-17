@@ -11,6 +11,7 @@ import com.jyhun.shop.repository.OrderItemRepository;
 import com.jyhun.shop.repository.OrderRepository;
 import com.jyhun.shop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -32,6 +34,7 @@ public class OrderService {
     @Transactional
     public ResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
 
+        long startTime = System.currentTimeMillis();
         User user = userService.getLoginUser();
 
         List<OrderItem> orderItems = orderRequestDTO.getItems().stream().map(orderItemRequest -> {
@@ -74,6 +77,9 @@ public class OrderService {
             cartRepository.deleteByProductIdInAndUserId(productIds, user.getId());
         }
         orderRepository.save(order);
+
+        long endTime = System.currentTimeMillis();
+        log.info("주문 처리 완료 - 소요 시간: {}ms", (endTime - startTime));
 
         return ResponseDTO.builder()
                 .status(200)
