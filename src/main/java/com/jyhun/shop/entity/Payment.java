@@ -1,5 +1,7 @@
 package com.jyhun.shop.entity;
 
+import com.jyhun.shop.enums.OrderStatus;
+import com.jyhun.shop.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,5 +18,8 @@ public class Payment {
     private Long id;
 
     private Long price;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
 }
