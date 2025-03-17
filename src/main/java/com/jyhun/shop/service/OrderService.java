@@ -55,11 +55,6 @@ public class OrderService {
                 .map(OrderItem::calculateTotalPrice)
                 .reduce(0L, Long::sum);
 
-        if (user.getBalance() < totalPrice) {
-            throw new InsufficientBalanceException("잔액이 부족합니다.");
-        }
-        user.updateBalance(user.getBalance() - totalPrice);
-
         Order order = Order.builder()
                 .user(user)
                 .totalPrice(totalPrice)
@@ -67,7 +62,7 @@ public class OrderService {
 
         orderItems.forEach(order::addOrderItem);
 
-        Payment payment = paymentService.createPayment(totalPrice);
+        Payment payment = paymentService.createPayment(user, totalPrice);
         order.changePayment(payment);
 
         if (orderRequestDTO.getOrderType().equals("cart")) {
