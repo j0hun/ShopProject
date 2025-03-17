@@ -2,6 +2,7 @@ package com.jyhun.shop.service;
 
 import com.jyhun.shop.entity.Payment;
 import com.jyhun.shop.entity.User;
+import com.jyhun.shop.enums.PaymentStatus;
 import com.jyhun.shop.exception.InsufficientBalanceException;
 import com.jyhun.shop.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class PaymentService {
 
         Payment payment = Payment.builder()
                 .price(totalPrice)
+                .paymentStatus(PaymentStatus.COMPLETED)
                 .build();
 
         return paymentRepository.save(payment);
