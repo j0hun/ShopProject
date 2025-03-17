@@ -104,16 +104,16 @@ public class OrderService {
 
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
                 .orElseThrow(() -> new NotFoundException("주문 항목 조회 실패"));
-
         orderItem.cancel();
-
-        user.updateBalance(user.getBalance() + orderItem.calculateTotalPrice());
-
-        Product product = orderItem.getProduct();
-        product.increaseStock(orderItem.getQuantity());
 
         Order order = orderRepository.findByOrderItemListId(orderItemId)
                 .orElseThrow(() -> new NotFoundException("주문 조회 실패"));
+
+        Payment payment = order.getPayment();
+        paymentService.refundPayment(user, orderItem, payment);
+
+        Product product = orderItem.getProduct();
+        product.increaseStock(orderItem.getQuantity());
 
         Long updatedTotalPrice = order.getOrderItemList().stream()
                 .filter(item -> item.getStatus() != OrderStatus.CANCELED)
@@ -129,4 +129,5 @@ public class OrderService {
                 .build();
 
     }
+
 }

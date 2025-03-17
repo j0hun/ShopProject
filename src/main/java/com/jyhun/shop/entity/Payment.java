@@ -22,4 +22,15 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
+    @Builder.Default
+    private Long refundedAmount = 0L;
+
+    public void cancel() {
+        this.paymentStatus = PaymentStatus.CANCELED;
+    }
+
+    public void addRefundAmount(Long refundAmount) {
+        this.refundedAmount += refundAmount;
+    }
+
 }

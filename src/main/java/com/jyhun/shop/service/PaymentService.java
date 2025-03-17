@@ -1,5 +1,6 @@
 package com.jyhun.shop.service;
 
+import com.jyhun.shop.entity.OrderItem;
 import com.jyhun.shop.entity.Payment;
 import com.jyhun.shop.entity.User;
 import com.jyhun.shop.enums.PaymentStatus;
@@ -34,6 +35,16 @@ public class PaymentService {
 
         return paymentRepository.save(payment);
 
+    }
+
+    @Transactional
+    public Payment refundPayment(User user, OrderItem orderItem, Payment payment) {
+
+        Long refundAmount = orderItem.calculateTotalPrice();
+        user.updateBalance(user.getBalance() + refundAmount);
+
+        payment.addRefundAmount(refundAmount);
+        return paymentRepository.save(payment);
     }
 
 }
