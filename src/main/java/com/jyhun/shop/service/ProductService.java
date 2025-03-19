@@ -24,11 +24,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final EntityDTOMapper entityDTOMapper;
-    private final LocalStorageService localStorageService;
+    private final StorageService storageService;
 
     public ResponseDTO createProduct(Long categoryId, MultipartFile image, String name, String description, Long price,Long stock) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("카테고리 조회 실패"));
-        String productImageUrl = localStorageService.saveImageToLocal(image);
+        String productImageUrl = storageService.uploadImage(image);
 
         Product product = Product.builder()
                 .category(category)
@@ -51,7 +51,7 @@ public class ProductService {
         String productImageUrl = null;
 
         if (image != null && !image.isEmpty()) {
-            productImageUrl = localStorageService.saveImageToLocal(image);
+            productImageUrl = storageService.uploadImage(image);
         }
 
         product.updateProduct(name, description, productImageUrl, price,stock,category);

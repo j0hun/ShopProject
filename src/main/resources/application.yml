@@ -12,11 +12,16 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
-  web:
-    resources:
-      static-locations: file:///home/jyh/Image/
+  cloud:
+    gcp:
+      credentials:
+        location: ${GOOGLE_APPLICATION_CREDENTIALS}
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
 jwt:
   secret: ${JWT_SECRET}
+
+gcp:
+  storage:
+    bucket: ${bucketName}
