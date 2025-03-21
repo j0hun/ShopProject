@@ -15,7 +15,7 @@ spring:
   cloud:
     gcp:
       credentials:
-        location: ${GOOGLE_APPLICATION_CREDENTIALS}
+        location: classpath:gcp-credentials.json
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace

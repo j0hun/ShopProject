@@ -35,7 +35,7 @@ public class StorageService {
 
             String uniqueFileName = UUID.randomUUID() + fileExtension;
 
-            String imgUrl = "https://storage.googleapis.com/" + bucketName + "/" + uniqueFileName;
+            String imgUrl = "https://storage.cloud.google.com/" + bucketName + "/" + uniqueFileName;
 
             BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, uniqueFileName)
                     .setContentType(multipartFile.getContentType())
